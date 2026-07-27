@@ -219,8 +219,14 @@
       margin-top: 3px;
       flex-shrink: 0;
       accent-color: #58a6ff;
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      appearance: auto;
+      -webkit-appearance: radio;
+      opacity: 1;
+      visibility: visible;
+      display: inline-block;
     }
 
     .option-item span {
@@ -265,10 +271,13 @@
 
     /* ── Error messages ───────────────────────────────────────────────────── */
     .error-message {
-      display: none;
+      display: none !important;
       color: #f85149;
       font-size: 0.78rem;
       margin-top: 0.4rem;
+    }
+    .error-message.visible {
+      display: block !important;
     }
 
     /* ── Textarea ─────────────────────────────────────────────────────────── */
@@ -694,7 +703,12 @@
 
     function showErr(id, show) {
       const el = document.getElementById(id);
-      if (el) el.style.display = show ? 'block' : 'none';
+      if (!el) return;
+      if (show) {
+        el.classList.add('visible');
+      } else {
+        el.classList.remove('visible');
+      }
     }
 
     function validateStep(step) {
