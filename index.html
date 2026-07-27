@@ -683,6 +683,21 @@
           </select>
         </div>
 
+        <div class="form-group">
+          <label>Are you an IT provider or MSP managing cloud compliance for multiple clients? <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-option">
+              <input type="radio" name="is_msp" value="yes" required>
+              <span>Yes — I manage IT/compliance for other businesses</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="is_msp" value="no" required>
+              <span>No — I'm looking to manage compliance for my own organisation</span>
+            </label>
+          </div>
+          <div class="error-message" id="is_msp-error">Please select an option.</div>
+        </div>
+
         <div class="btn-row">
           <button class="btn-back" onclick="goStep(1)">← Back</button>
           <button class="btn-next" onclick="goStep(3)">Continue →</button>
@@ -755,6 +770,64 @@
             </label>
           </div>
           <div class="error-msg" id="painErr">Please select your main challenge.</div>
+        </div>
+
+         <div class="form-group">
+          <label>Which part of the Cyber Essentials questionnaire do you find hardest to answer confidently? <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-option">
+              <input type="radio" name="ce_hardest" value="firewalls" required>
+              <span>Firewall and network boundary controls (Section A4)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="ce_hardest" value="secure_config">
+              <span>Secure configuration of devices and software (Section A5)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="ce_hardest" value="patching">
+              <span>Software patching and updates (Section A6)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="ce_hardest" value="user_access">
+              <span>User access control and MFA (Section A7)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="ce_hardest" value="malware">
+              <span>Malware protection (Section A8)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="ce_hardest" value="not_started">
+              <span>I haven't started the questionnaire yet</span>
+            </label>
+          </div>
+          <div class="error-message" id="ce_hardest-error">Please select an option.</div>
+        </div>
+
+        <div class="form-group">
+          <label>How do you currently manage software updates across your cloud environment? <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-option">
+              <input type="radio" name="patch_management" value="auto_os" required>
+              <span>Operating system auto-update settings (built-in)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="patch_management" value="centralised_tool">
+              <span>Centralised tool (e.g. Intune, AWS Systems Manager, Azure Update Manager)</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="patch_management" value="manual">
+              <span>Manually — updates applied by IT staff when needed</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="patch_management" value="no_process">
+              <span>We don't currently have a patching process</span>
+            </label>
+            <label class="checkbox-option">
+              <input type="radio" name="patch_management" value="not_sure">
+              <span>Not sure</span>
+            </label>
+          </div>
+          <div class="error-message" id="patch_management-error">Please select an option.</div>
         </div>
 
         <div class="field">
@@ -871,7 +944,9 @@
     if (step === 2) {
       const checked = document.querySelectorAll('.check-group input:checked');
       showErr('cloudErr', checked.length === 0);
-      valid = checked.length > 0;
+      const msp = document.querySelector('input[name="is_msp"]:checked');
+      showErr('is_msp-error', !msp);
+      valid = checked.length > 0 && !!msp;
     }
 
     if (step === 3) {
@@ -883,7 +958,11 @@
     if (step === 4) {
       const sel = document.querySelector('input[name="pain"]:checked');
       showErr('painErr', !sel);
-      valid = !!sel;
+      const hardest = document.querySelector('input[name="ce_hardest"]:checked');
+      showErr('ce_hardest-error', !hardest);
+      const patching = document.querySelector('input[name="patch_management"]:checked');
+      showErr('patch_management-error', !patching);
+      valid = !!sel && !!hardest && !!patching;
     }
 
     if (step === 5) {
